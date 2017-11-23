@@ -190,7 +190,7 @@ class PacketUtils:
             if (packet == None):
                 print("PACKET IS DEAD")
                 return "DEAD"
-            self.send_pkt(flags="PA", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
+            self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
             result = self.get_pkt()
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
@@ -207,5 +207,5 @@ class PacketUtils:
                     rst_lst.append(False)
                     break
                 response = self.get_pkt()
-            self.packetQueue = Queue.Queue(100000)
+            #self.packetQueue = Queue.Queue(100000)
         return (ip_addr, rst_lst)
