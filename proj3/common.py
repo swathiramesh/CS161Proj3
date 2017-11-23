@@ -191,23 +191,22 @@ class PacketUtils:
         ip_addr = []
         rst_lst = []
         for i in range(hops):
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
             response = self.get_pkt()
-            # print("RESPONSE HERE", response)
+            print("RESPONSE HERE", response)
             while response:
                 if isRST(response):
-                    print ("ip_addr list", ip_addr)
-                    print("response ip", response[IP].src)
-                    #ip_addr.append(response[IP].src)
+                    # print ("ip_addr list", ip_addr)
+                    # print("response ip", response[IP].src)
+                    ip_addr.append(response[IP].src)
                     rst_lst.append(True)
                     break
                 if isTimeExceeded(response):
                     ip_addr.append(response[IP].src)
-                    #rst_lst.append(False)
+                    rst_lst.append(False)
                     break
                 response = self.get_pkt()
-            self.packetQueue = Queue.Queue(100000)
-
+            #self.packetQueue = Queue.Queue(100000)
         return (ip_addr, rst_lst)
