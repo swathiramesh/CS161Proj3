@@ -118,7 +118,7 @@ class PacketUtils:
 
 
     # Has an automatic 5 second timeout.
-    def get_pkt(self, timeout=5):
+    def get_pkt(self, timeout=1):
         try:
             return self.packetQueue.get(True, timeout)
         except Queue.Empty:
@@ -181,17 +181,17 @@ class PacketUtils:
     # if there is a RST back for that particular request
     def traceroute(self, target, hops):
         #return "NEED TO IMPLEMENT"
+        sport = random.randint(2000, 30000)
+        self.send_pkt(flags="S", sport=sport)
+        packet = self.get_pkt()
+        if (packet == None):
+            print("PACKET IS DEAD")
+            return "DEAD"
+        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
+        result = self.get_pkt()
         ip_addr = []
         rst_lst = []
         for i in range(hops):
-            sport = random.randint(2000, 30000)
-            self.send_pkt(flags="S", sport=sport)
-            packet = self.get_pkt()
-            if (packet == None):
-                print("PACKET IS DEAD")
-                return "DEAD"
-            self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
-            result = self.get_pkt()
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
@@ -202,7 +202,7 @@ class PacketUtils:
                     print("RST PACKET")
                     rst_lst.append(True)
                     break
-                if isTimeExceeded(response):
+                elif isTimeExceeded(response):
                     ip_addr.append(response[IP].src)
                     rst_lst.append(False)
                     break
