@@ -200,11 +200,11 @@ class PacketUtils:
                 if isRST(response):
                     # print ("ip_addr list", ip_addr)
                     # print("response ip", response[IP].src)
-                    ip_addr.append(response[IP].src)
+                    #ip_addr.append(response[IP].src)
                     rst_lst.append(True)
                     break
                 if isTimeExceeded(response):
-                    #ip_addr.append(response[IP].src)
+                    ip_addr.append(response[IP].src)
                     rst_lst.append(False)
                     break
                 response = self.get_pkt()
