@@ -204,9 +204,9 @@ class PacketUtils:
                     rst_lst.append(True)
                     break
                 if isTimeExceeded(response):
-                    ip_addr.append(response[IP].src)
+                    #ip_addr.append(response[IP].src)
                     rst_lst.append(False)
                     break
                 response = self.get_pkt()
-            #self.packetQueue = Queue.Queue(100000)
+            self.packetQueue = Queue.Queue(100000)
         return (ip_addr, rst_lst)
