@@ -184,15 +184,16 @@ class PacketUtils:
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport)
         packet = self.get_pkt()
-        while packet == None:
-            print("ACK not received")
-            self.send_pkt(flags="S", sport=sport)
-            packet = self.get_pkt()
-        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload = triggerfetch)
+        # while packet == None:
+        #     print("ACK not received")
+        #     self.send_pkt(flags="S", sport=sport)
+        #     packet = self.get_pkt()
+        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
         result = self.get_pkt()
         while result == None:
-            print("Final Ack")
-            self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload = triggerfetch)
+            self.send_pkt(flags="S", sport=sport)
+            packet = self.get_pkt()
+            self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
             result = self.get_pkt()
         ip_addr = []
         rst_lst = []
