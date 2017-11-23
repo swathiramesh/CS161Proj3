@@ -181,10 +181,10 @@ class PacketUtils:
     # if there is a RST back for that particular request
     def traceroute(self, target, hops):
         #return "NEED TO IMPLEMENT"
-        sport = random.randint(2000, 30000)
         ip_addr = []
         rst_lst = []
         for i in range(hops):
+            sport = random.randint(2000, 30000)
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
             if (packet == None):
