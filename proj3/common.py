@@ -188,6 +188,7 @@ class PacketUtils:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
             if (packet == None):
+                print("PACKET IS DEAD") 
                 return "DEAD"
             self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
             result = self.get_pkt()
