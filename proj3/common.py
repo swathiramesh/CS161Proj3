@@ -118,7 +118,7 @@ class PacketUtils:
 
 
     # Has an automatic 5 second timeout.
-    def get_pkt(self, timeout=1):
+    def get_pkt(self, timeout=5):
         try:
             return self.packetQueue.get(True, timeout)
         except Queue.Empty:
@@ -195,6 +195,7 @@ class PacketUtils:
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            time.sleep(5)
             response = self.get_pkt()
             #print("RESPONSE HERE", response)
             while response:
