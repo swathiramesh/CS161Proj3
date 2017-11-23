@@ -198,13 +198,13 @@ class PacketUtils:
             response = self.get_pkt()
             #print("RESPONSE HERE", response)
             while response:
-                if isRST(response) and response[TCP]:
+                if isRST(response):
                     print("RST PACKET")
                     rst_lst.append(True)
                     break
-                elif isTimeExceeded(response) and response[TCP]:
+                elif isTimeExceeded(response):
                     ip_addr.append(response[IP].src)
-                    rst_lst.append(False)
+                    #rst_lst.append(False)
                     break
                 response = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
