@@ -195,12 +195,10 @@ class PacketUtils:
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
             response = self.get_pkt()
-            print("RESPONSE HERE", response)
+            #print("RESPONSE HERE", response)
             while response:
                 if isRST(response):
-                    # print ("ip_addr list", ip_addr)
-                    # print("response ip", response[IP].src)
-                    #ip_addr.append(response[IP].src)
+                    print("RST PACKET") 
                     rst_lst.append(True)
                     break
                 if isTimeExceeded(response):
