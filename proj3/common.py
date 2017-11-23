@@ -191,14 +191,14 @@ class PacketUtils:
         ip_addr = []
         rst_lst = []
         for i in range(hops):
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             response = self.get_pkt()
             #print("RESPONSE HERE", response)
             while response:
                 if isRST(response):
-                    print("RST PACKET") 
+                    print("RST PACKET")
                     rst_lst.append(True)
                     break
                 if isTimeExceeded(response):
