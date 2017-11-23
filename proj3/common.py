@@ -191,6 +191,7 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
         result = self.get_pkt()
         while result == None:
+            print("Handshake not working FML")
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
             self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
