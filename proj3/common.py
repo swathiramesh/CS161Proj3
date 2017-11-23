@@ -192,9 +192,9 @@ class PacketUtils:
         ip_addr = []
         rst_lst = []
         for i in range(hops):
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=result[TCP].ack, ack=resultTCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=result[TCP].ack, ack=result[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=result[TCP].ack, ack=result[TCP].seq+1, payload=triggerfetch)
             response = self.get_pkt()
             #print("RESPONSE HERE", response)
             while response:
