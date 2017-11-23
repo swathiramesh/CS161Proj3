@@ -190,11 +190,11 @@ class PacketUtils:
             if (packet == None):
                 print("PACKET IS DEAD")
                 return "DEAD"
-            self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
+            self.send_pkt(flags="A", flags = "PA", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
             result = self.get_pkt()
-            self.send_pkt(ttl = i, sport=sport, seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             response = self.get_pkt()
             #print("RESPONSE HERE", response)
             while response:
