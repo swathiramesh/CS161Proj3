@@ -202,7 +202,7 @@ class PacketUtils:
                     print("RST PACKET")
                     rst_lst.append(True)
                     break
-            elif isTimeExceeded(response) and response[TCP]:
+                elif isTimeExceeded(response) and response[TCP]:
                     ip_addr.append(response[IP].src)
                     rst_lst.append(False)
                     break
