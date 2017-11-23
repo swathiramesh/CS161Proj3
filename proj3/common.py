@@ -184,7 +184,7 @@ class PacketUtils:
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip = target)
         packet = self.get_pkt()
-        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
+        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload = triggerfetch)
         result = self.get_pkt()
         while result == None:
             print("Handshake not working FML")
