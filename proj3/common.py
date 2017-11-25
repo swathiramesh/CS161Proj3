@@ -181,7 +181,7 @@ class PacketUtils:
     # if there is a RST back for that particular request
     def traceroute(self, target, hops):
         #return "NEED TO IMPLEMENT"
-
+        hops = 32
         ip_addr = [None for i in range(hops)]
         rst_lst = [False for i in range(hops)]
         existing_ip = set()
