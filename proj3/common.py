@@ -182,30 +182,24 @@ class PacketUtils:
     def traceroute(self, target, hops):
         #return "NEED TO IMPLEMENT"
         sport = random.randint(2000, 30000)
-        self.send_pkt(flags="S", sport=sport, dip = target)
+        self.send_pkt(flags="S", sport=sport)
         packet = self.get_pkt()
-        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload = triggerfetch)
-        result = self.get_pkt()
-        while result == None:
-            print("Handshake not working FML")
-            self.send_pkt(flags="S", sport=sport)
-            packet = self.get_pkt()
-            self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1)
-            result = self.get_pkt()
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
+        #result = self.get_pkt()
         ip_addr = []
         rst_lst = []
         for i in range(hops):
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=result[TCP].ack, ack=result[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=result[TCP].ack, ack=result[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=result[TCP].ack, ack=result[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             response = self.get_pkt()
             #print("RESPONSE HERE", response)
-            while response:
+            while not self.packetQueue.Empty():
                 if isRST(response):
                     print("RST PACKET")
                     rst_lst.append(True)
                     break
-                elif isTimeExceeded(response):
+                if isTimeExceeded(response):
                     ip_addr.append(response[IP].src)
                     rst_lst.append(False)
                     break
