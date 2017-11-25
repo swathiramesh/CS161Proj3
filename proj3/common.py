@@ -14,7 +14,7 @@ maxhop = 25
 # A request that will trigger the great firewall but will NOT cause
 # the web server to process the connection.  You probably want it here
 
-triggerfetch = "GET / HTTP/1.1\nHost: www.google.com\n\n"
+triggerfetch = "GET /search?q=Falun+Gong HTTP/1.1\nhost: www.google.com\n\n"#"GET / HTTP/1.1\nHost: www.google.com\n\n"
 
 # A couple useful functions that take scapy packets
 def isRST(p):
