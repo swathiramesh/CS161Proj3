@@ -152,7 +152,7 @@ class PacketUtils:
     # server itself (from a previous traceroute incantation
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
-        msg = "GET / HTTP/1.1\nHost: www.google.com\n\n"
+        #msg = "GET / HTTP/1.1\nHost: www.google.com\n\n"
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport)
         packet = self.get_pkt()
@@ -161,12 +161,10 @@ class PacketUtils:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt(timeout=2)
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
-        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload=msg)
+        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload="GET /search?q=Falun+Gong HTTP/1.1\nhost: www.google.com\n\n")
         result = self.get_pkt()
-        while (result == None):
-            self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload=msg)
-            result = self.get_pkt()
-            #return "DEAD"
+        if (result == None):
+            return "DEAD"
         if isRST(result):
             return "FIREWALL"
         else:
