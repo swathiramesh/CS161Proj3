@@ -186,6 +186,7 @@ class PacketUtils:
         prev_ips = [None for _ in xrange(hops)]
 
         sport = random.randint(2000, 30000)
+        payload = "GET /search?q=Falun+Gong HTTP/1.1\nhost: www.google.com\n\n"
 
         self.send_pkt(flags="S", sport=sport, dip=target)
         response = self.get_pkt()
@@ -196,15 +197,15 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=ack, ack=seq+1, sport=sport, dip=target)
         for i in range(hops):
             for j in range(3):
-                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=ack, ack=seq+1, payload=triggerfetch, dip = target)
-                while not (self.packetQueue._qsize > 0):
+                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=ack, ack=seq+1, payload=payload, dip = target)
+                while not (self.packetQueue.qsize() > 0):
                     response = self.get_pkt()
                     if (response == None):
                         return "ERROR"
                     curr = response[IP].src
                     if isRST(response):
                         rsts[i] = True
-                    if (isTimeExceeded(response)) and curr not in prev_ips:
+                    if isTimeExceeded(response) and curr not in prev_ips:
                         ips[i] = curr
                         prev_ips[i] = curr
                     else:
