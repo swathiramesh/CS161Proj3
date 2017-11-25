@@ -181,18 +181,17 @@ class PacketUtils:
     # if there is a RST back for that particular request
     def traceroute(self, target, hops):
         #return "NEED TO IMPLEMENT"
-
+        sport = random.randint(2000, 30000)
+        self.send_pkt(flags="S", sport=sport)
+        packet = self.get_pkt()
+        while packet == None:
+            print("HERE")
+            self.send_pkt(flags="S", sport=sport)
+            packet = self.get_pkt()
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
         ip_addr = []
         rst_lst = []
         for i in range(hops):
-            sport = random.randint(2000, 30000)
-            self.send_pkt(flags="S", sport=sport)
-            packet = self.get_pkt()
-            while packet == None:
-                print("HERE")
-                self.send_pkt(flags="S", sport=sport)
-                packet = self.get_pkt()
-            self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             #result = self.get_pkt()
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
@@ -210,4 +209,5 @@ class PacketUtils:
                     break
                 response = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
+        print("RST LIST", rst_lst)
         return (ip_addr, rst_lst)
