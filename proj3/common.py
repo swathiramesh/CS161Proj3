@@ -118,7 +118,7 @@ class PacketUtils:
 
 
     # Has an automatic 5 second timeout.
-    def get_pkt(self, timeout=10):
+    def get_pkt(self, timeout=5):
         try:
             return self.packetQueue.get(True, timeout)
         except Queue.Empty:
@@ -198,16 +198,16 @@ class PacketUtils:
             for i in range(3):
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
                 response = self.get_pkt()
-                while response:
+                while not self.packetQueue.Empty:
                     if isRST(response):
                         print("RST PACKET")
                         rst_lst[i] =True
-                        break
+                        #break
                     ip_to_add = response[IP].src
                     if isTimeExceeded(response) and ip_to_add not in existing_ip:
                         ip_addr[i] = ip_to_add
                         existing_ip.add(ip_to_add)
-                        break
+                        #break
                     response = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
         print("RST LIST", rst_lst)
