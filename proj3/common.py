@@ -213,6 +213,6 @@ class PacketUtils:
                         existing_ip.add(ip_to_add)
                         #break
                     response = self.get_pkt()
-            self.packetQueue = Queue.Queue(100000)
+                    self.packetQueue = Queue.Queue(100000)
         print("RST LIST", rst_lst)
         return (ip_addr, rst_lst)
