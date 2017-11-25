@@ -199,7 +199,7 @@ class PacketUtils:
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 response = self.get_pkt()
                 while not (self.packetQueue._qsize == 0):
-                    if response = None:
+                    if response == None:
                         return "Error"
                     if isRST(response):
                         print("RST PACKET")
