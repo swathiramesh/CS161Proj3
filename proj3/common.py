@@ -181,68 +181,39 @@ class PacketUtils:
     # if there is a RST back for that particular request
     def traceroute(self, target, hops):
         #return "NEED TO IMPLEMENT"
-        ips = [None for _ in xrange(hops)]
-        rsts = [False for _ in xrange(hops)]
-        prev_ips = [None for _ in xrange(hops)]
 
-        sport = random.randint(2000, 30000)
-        payload = "GET /search?q=Falun+Gong HTTP/1.1\nhost: www.google.com\n\n"
-
-        self.send_pkt(flags="S", sport=sport, dip=target)
-        response = self.get_pkt()
-        if response == None:
-            return "DEAD"
-        ack = response[TCP].ack
-        seq = response[TCP].seq
-        self.send_pkt(flags="A", seq=ack, ack=seq+1, sport=sport, dip=target)
+        ip_addr = [None for i in range(hops)]
+        rst_lst = [False for i in range(hops)]
+        existing_ip = set()
+        print("HOPS", hops)
         for i in range(hops):
-            for j in range(3):
-                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=ack, ack=seq+1, payload=payload, dip = target)
-                while not (self.packetQueue.qsize() > 0):
-                    response = self.get_pkt()
-                    if (response == None):
-                        return "ERROR"
-                    curr = response[IP].src
+            #result = self.get_pkt()
+            #for i in range(3):
+                sport = random.randint(2000, 30000)
+                self.send_pkt(flags="S", sport=sport)
+                packet = self.get_pkt()
+                while packet == None:
+                    print("HERE")
+                    self.send_pkt(flags="S", sport=sport)
+                    packet = self.get_pkt()
+                self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
+                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
+                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
+                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
+                response = self.get_pkt(timeout=2)
+                while not (self.packetQueue._qsize == 0) and response:
+                    # if response == None:
+                    #     return "Error"
                     if isRST(response):
-                        rsts[i] = True
-                    if isTimeExceeded(response) and curr not in prev_ips:
-                        ips[i] = curr
-                        prev_ips[i] = curr
-                    else:
-                        continue
-        return (ips, rsts)
-        # ip_addr = [None for i in range(hops)]
-        # rst_lst = [False for i in range(hops)]
-        # existing_ip = set()
-        # print("HOPS", hops)
-        # for i in range(hops):
-        #     #result = self.get_pkt()
-        #     #for i in range(3):
-        #         sport = random.randint(2000, 30000)
-        #         self.send_pkt(flags="S", sport=sport)
-        #         packet = self.get_pkt()
-        #         while packet == None:
-        #             print("HERE")
-        #             self.send_pkt(flags="S", sport=sport)
-        #             packet = self.get_pkt()
-        #         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
-        #         self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
-        #         self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
-        #         self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
-        #         response = self.get_pkt(timeout=2)
-        #         while not (self.packetQueue._qsize == 0) and response:
-        #             # if response == None:
-        #             #     return "Error"
-        #             if isRST(response):
-        #                 print("RST PACKET")
-        #                 rst_lst[i] =True
-        #                 #break
-        #             ip_to_add = response[IP].src
-        #             if isTimeExceeded(response) and ip_to_add not in existing_ip:
-        #                 ip_addr[i] = ip_to_add
-        #                 existing_ip.add(ip_to_add)
-        #                 #break
-        #             response = self.get_pkt(timeout=2)
-        #             self.packetQueue = Queue.Queue(100000)
-        # print("RST LIST", rst_lst)
-        # return (ip_addr, rst_lst)
+                        print("RST PACKET")
+                        rst_lst[i] =True
+                        #break
+                    ip_to_add = response[IP].src
+                    if isTimeExceeded(response) and ip_to_add not in existing_ip:
+                        ip_addr[i] = ip_to_add
+                        existing_ip.add(ip_to_add)
+                        #break
+                    response = self.get_pkt(timeout=2)
+                    self.packetQueue = Queue.Queue(100000)
+        print("RST LIST", rst_lst)
+        return (ip_addr, rst_lst)
