@@ -14,7 +14,7 @@ maxhop = 25
 # A request that will trigger the great firewall but will NOT cause
 # the web server to process the connection.  You probably want it here
 
-triggerfetch = "GET / HTTP/1.1\nHost: www.google.com\n\n"
+triggerfetch = "GET / HTTP/1.1\nHost: www.google.com\r\n"
 
 # A couple useful functions that take scapy packets
 def isRST(p):
@@ -118,7 +118,7 @@ class PacketUtils:
 
 
     # Has an automatic 5 second timeout.
-    def get_pkt(self, timeout=5):
+    def get_pkt(self, timeout=10):
         try:
             return self.packetQueue.get(True, timeout)
         except Queue.Empty:
@@ -192,6 +192,7 @@ class PacketUtils:
         ip_addr = []
         rst_lst = []
         for i in range(hops):
+            print("HOPS," hops)
             #result = self.get_pkt()
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
