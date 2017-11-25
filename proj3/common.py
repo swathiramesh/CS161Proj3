@@ -177,20 +177,29 @@ class PacketUtils:
         # self.send_msg([triggerfetch], dst=target, syn=True)
         #return "NEED TO IMPLEMENT"
         sport = random.randint(2000, 30000)
-        self.send_pkt(flags="S", sport=sport)
+        self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
+
         while packet == None:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
-            #return "DEAD"
-        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload="GET / HTTP/1.1\nHost: www.google.com\n\n")
-        result = self.get_pkt()
-        if (result == None):
-            return "DEAD"
-        if isRST(result):
-            return "FIREWALL"
-        else:
+
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target,
+            payload=triggerfetch)
+
+        while(self.packetQueue.qsize() > 0):
+            response = self.get_pkt()
+            if (response == None):
+                return "LIVE"
+            if isRST(response):
+                return "FIREWALL"
+
+        response = self.get_pkt()
+        if response == None:
             return "LIVE"
+        if isRST(response):
+            return "FIREWALL"
 
     # Format is
     # ([], [])
