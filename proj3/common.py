@@ -188,7 +188,7 @@ class PacketUtils:
             print("HERE")
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
-        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
         ip_addr = [None for i in range(hops)]
         rst_lst = [False for i in range(hops)]
         existing_ip = set()
@@ -196,7 +196,7 @@ class PacketUtils:
         for i in range(hops):
             #result = self.get_pkt()
             for i in range(3):
-                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
+                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 #response = self.get_pkt()
                 while not (self.packetQueue._qsize == 0):
                     response = self.get_pkt()
