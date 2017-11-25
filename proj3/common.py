@@ -154,29 +154,6 @@ class PacketUtils:
         #return "NEED TO IMPLEMENT"
         #msg = "GET / HTTP/1.1\nHost: www.google.com\n\n"
         sport = random.randint(2000, 30000)
-        self.send_pkt(flags="S", sport=sport)
-        packet = self.get_pkt()
-        while packet == None:
-            print("HERE")
-            self.send_pkt(flags="S", sport=sport)
-            packet = self.get_pkt(timeout=2)
-        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
-        self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload="GET /search?q=Falun+Gong HTTP/1.1\nhost: www.google.com\n\n")
-        result = self.get_pkt()
-        if (result == None):
-            return "DEAD"
-        if isRST(result):
-            return "FIREWALL"
-        else:
-            return "LIVE"
-
-    # Returns "DEAD" if server isn't alive,
-    # "LIVE" if teh server is alive,
-    # "FIREWALL" if it is behind the Great Firewall
-    def ping(self, target):
-        # self.send_msg([triggerfetch], dst=target, syn=True)
-        #return "NEED TO IMPLEMENT"
-        sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
 
@@ -200,6 +177,40 @@ class PacketUtils:
             return "LIVE"
         if isRST(response):
             return "FIREWALL"
+
+    # Returns "DEAD" if server isn't alive,
+    # "LIVE" if teh server is alive,
+    # "FIREWALL" if it is behind the Great Firewall
+    def ping(self, target):
+        # self.send_msg([triggerfetch], dst=target, syn=True)
+        #return "NEED TO IMPLEMENT"
+        sport = random.randint(2000, 30000)
+        self.send_pkt(flags="S", sport=sport, dip=target)
+        packet = self.get_pkt()
+
+        while packet == None:
+            self.send_pkt(flags="S", sport=sport)
+            packet = self.get_pkt()
+        #payload = "GET / HTTP/1.1\nHost: inst.eecs.berkeley.edu\n\n"
+
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target,
+            payload=triggerfetch)
+
+        while(self.packetQueue.qsize() > 0):
+            response = self.get_pkt()
+            if (response == None):
+                return "DEAD"
+            if isRST(response):
+                return "FIREWALL"
+
+        response = self.get_pkt()
+        if response == None:
+            return "DEAD"
+        if isRST(response):
+            return "FIREWALL"
+        else:
+            return "LIVE"
 
     # Format is
     # ([], [])
