@@ -200,7 +200,7 @@ class PacketUtils:
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
-                response = self.get_pkt()
+                response = self.get_pkt(timeout=2)
                 while not (self.packetQueue._qsize == 0) and response:
                     # if response == None:
                     #     return "Error"
@@ -213,7 +213,7 @@ class PacketUtils:
                         ip_addr[i] = ip_to_add
                         existing_ip.add(ip_to_add)
                         #break
-                    response = self.get_pkt()
+                    response = self.get_pkt(timeout=2)
                     self.packetQueue = Queue.Queue(100000)
         print("RST LIST", rst_lst)
         return (ip_addr, rst_lst)
