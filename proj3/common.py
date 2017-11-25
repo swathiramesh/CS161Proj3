@@ -189,8 +189,8 @@ class PacketUtils:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-        ip_addr = []
-        rst_lst = []
+        ip_addr = [None for i in range(hops)]
+        rst_lst = [False for i in range(hops)]
         print("HOPS", hops)
         for i in range(hops):
             #result = self.get_pkt()
@@ -202,11 +202,11 @@ class PacketUtils:
             while response:
                 if isRST(response):
                     print("RST PACKET")
-                    rst_lst.append(True)
+                    rst_lst[i] =True
                     break
                 if isTimeExceeded(response):
-                    ip_addr.append(response[IP].src)
-                    rst_lst.append(False)
+                    ip_addr[i] = response[IP].src
+                    rst_lst[i] = False
                     break
                 response = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
