@@ -189,9 +189,10 @@ class PacketUtils:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
             while packet == None:
+                print("HERE")
                 self.send_pkt(flags="S", sport=sport)
                 packet = self.get_pkt()
-            self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
+            self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             #result = self.get_pkt()
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
