@@ -162,8 +162,10 @@ class PacketUtils:
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport)
         packet = self.get_pkt()
-        if (packet == None):
-            return "DEAD"
+        while packet == None:
+            self.send_pkt(flags="S", sport=sport)
+            packet = self.get_pkt()
+            #return "DEAD"
         self.send_pkt(flags="A", seq=packet[TCP].ack+1, ack=packet[TCP].seq+1, payload="GET / HTTP/1.1\nHost: www.google.com\n\n")
         result = self.get_pkt()
         if (result == None):
