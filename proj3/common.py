@@ -202,7 +202,7 @@ class PacketUtils:
                     response = self.get_pkt()
                     if response == None:
                         print("HERE")
-                        continue
+                        break
                     if isRST(response):
                         print("RST PACKET")
                         rst_lst[i] =True
