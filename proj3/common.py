@@ -191,24 +191,24 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
         ip_addr = [None for i in range(hops)]
         rst_lst = [False for i in range(hops)]
+        existing_ip = set()
         print("HOPS", hops)
         for i in range(hops):
             #result = self.get_pkt()
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-            self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
-            response = self.get_pkt()
-            #print("RESPONSE HERE", response)
-            while response:
-                if isRST(response):
-                    print("RST PACKET")
-                    rst_lst[i] =True
-                    break
-                if isTimeExceeded(response):
-                    ip_addr[i] = response[IP].src
-                    rst_lst[i] = False
-                    break
+            for i in range(3):
+                self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
                 response = self.get_pkt()
+                while response:
+                    if isRST(response):
+                        print("RST PACKET")
+                        rst_lst[i] =True
+                        break
+                    ip_to_add = response[IP].src
+                    if isTimeExceeded(response) and ip_to_add not in existing_ip:
+                        ip_addr[i] = ip_to_add
+                        existing_ip.add(ip_to_add)
+                        break
+                    response = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
         print("RST LIST", rst_lst)
         return (ip_addr, rst_lst)
