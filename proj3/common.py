@@ -199,6 +199,8 @@ class PacketUtils:
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
                 response = self.get_pkt()
                 while not self.packetQueue._qsize == 0 :
+                    if response == None:
+                        continue 
                     if isRST(response):
                         print("RST PACKET")
                         rst_lst[i] =True
