@@ -197,12 +197,10 @@ class PacketUtils:
             #result = self.get_pkt()
             for i in range(3):
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
-                #response = self.get_pkt()
+                response = self.get_pkt()
                 while not (self.packetQueue._qsize == 0):
-                    response = self.get_pkt()
-                    if response == None:
-                        print("HERE")
-                        break
+                    if response = None:
+                        return "Error"
                     if isRST(response):
                         print("RST PACKET")
                         rst_lst[i] =True
@@ -212,6 +210,7 @@ class PacketUtils:
                         ip_addr[i] = ip_to_add
                         existing_ip.add(ip_to_add)
                         #break
+                    response = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
         print("RST LIST", rst_lst)
         return (ip_addr, rst_lst)
