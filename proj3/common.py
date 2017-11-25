@@ -191,8 +191,8 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
         ip_addr = []
         rst_lst = []
+        print("HOPS", hops)
         for i in range(hops):
-            print("HOPS," hops)
             #result = self.get_pkt()
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
             self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch)
