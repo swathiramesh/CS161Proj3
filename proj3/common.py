@@ -153,18 +153,17 @@ class PacketUtils:
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
         #msg = "GET / HTTP/1.1\nHost: www.google.com\r\n"
-        print("MSG", msg)
+        print(len(msg))
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
-
         while packet == None:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
-
-        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target,
-            payload=msg)
+        # for i in range(10):
+        #     self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target,
+        #     payload=msg)
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
