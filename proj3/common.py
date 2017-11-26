@@ -173,9 +173,9 @@ class PacketUtils:
             print("WHILE")
             if response and isRST(response):
                 return "Error"
-            if response and 'Raw' in response:
+            if response and Raw in response:
                 print("HERE")
-                print(packet['Raw'].load)
+                print(packet[Raw].load)
             response = self.get_pkt()
         print("END")
 
