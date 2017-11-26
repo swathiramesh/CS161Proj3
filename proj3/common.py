@@ -168,6 +168,8 @@ class PacketUtils:
             packet = self.get_pkt()
             while packet == None:
                 print("Here")
+                print(msg[i:i+1])
+                print(packet[TCP])
                 self.send_pkt(flags="A", seq=packet[TCP].ack + 1, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
                 packet = self.get_pkt()
                 if packet and 'Raw' in packet:
