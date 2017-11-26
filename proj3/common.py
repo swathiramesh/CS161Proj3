@@ -166,8 +166,8 @@ class PacketUtils:
             print("fragmentation", msg[i:i+1])
             self.send_pkt(flags="A", seq=packet[TCP].ack + 1, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
             packet = self.get_pkt()
-            while not (self.packetQueue._qsize == 0) and packet:
-                if 'Raw' in packet:
+            while packet == None or not self.packetQueue._qsize == 0 :
+                if packet and 'Raw' in packet:
                     print(packet['Raw'].load)
                 packet = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
