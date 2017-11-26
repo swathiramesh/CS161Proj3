@@ -158,6 +158,7 @@ class PacketUtils:
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
         while packet == None:
+            print("Here")
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
