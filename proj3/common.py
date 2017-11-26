@@ -167,7 +167,7 @@ class PacketUtils:
             packet = self.get_pkt()
             while not (self.packetQueue._qsize == 0) and packet:
                 packet = self.get_pkt()
-                print(packet['Raw'].load
+                print(packet['Raw'].load) 
             self.packetQueue = Queue.Queue(100000)
 
     # Returns "DEAD" if server isn't alive,
