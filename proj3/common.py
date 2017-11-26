@@ -170,11 +170,12 @@ class PacketUtils:
             #     self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1])
             #     response = self.get_pkt()
         response = self.get_pkt()
-        while not (self.packetQueue._qsize == 0) and response:
-            if Raw in response:
+        while not (self.packetQueue._qsize == 0):
+            print("WHILE")
+            if response and Raw in response:
                 print("HERE")
                 print(packet['Raw'].load)
-            response = self.get_pkt() 
+            response = self.get_pkt()
 
 
     # Returns "DEAD" if server isn't alive,
