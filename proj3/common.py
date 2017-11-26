@@ -14,7 +14,7 @@ maxhop = 25
 # A request that will trigger the great firewall but will NOT cause
 # the web server to process the connection.  You probably want it here
 
-triggerfetch = "GET /search?q=Falun+Gong HTTP/1.1\nhost: www.google.com\n\n"#"GET / HTTP/1.1\nHost: www.google.com\n\n"
+triggerfetch = "GET / HTTP/1.1\nHost: www.google.com\r\n"
 
 # A couple useful functions that take scapy packets
 def isRST(p):
@@ -152,7 +152,8 @@ class PacketUtils:
     # server itself (from a previous traceroute incantation
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
-        #msg = "GET / HTTP/1.1\nHost: www.google.com\n\n"
+        #msg = "GET / HTTP/1.1\nHost: www.google.com\r\n"
+        print(msg)
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
@@ -160,23 +161,10 @@ class PacketUtils:
         while packet == None:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
-
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
+
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target,
-            payload=triggerfetch)
-
-        while(self.packetQueue.qsize() > 0):
-            response = self.get_pkt()
-            if (response == None):
-                return "LIVE"
-            if isRST(response):
-                return "FIREWALL"
-
-        response = self.get_pkt()
-        if response == None:
-            return "LIVE"
-        if isRST(response):
-            return "FIREWALL"
+            payload=msg)
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
