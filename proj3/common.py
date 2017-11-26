@@ -152,6 +152,7 @@ class PacketUtils:
     # server itself (from a previous traceroute incantation
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
+        target = 34.224.169.21
         msg = "GET / HTTP/1.1\nHost: www.google.com\r\n\r\n"
         #print(len(msg))
         sport = random.randint(2000, 30000)
@@ -164,14 +165,12 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
         for i in range(len(msg)-1):
             print("fragmentation", msg[i:i+1])
-            self.send_pkt(flags="PA", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1])
-            # response = self.get_pkt()
-            # while response == None:
-            #     self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1])
-            #     response = self.get_pkt()
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1])
+            #dummy packet
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1], ttl=ttl)
         response = self.get_pkt()
         while not (self.packetQueue._qsize == 0):
-            print("WHILE", self.packetQueue._qsize)
+            print("WHILE")
             if response and isRST(response):
                 return "Error"
             if response and Raw in response:
