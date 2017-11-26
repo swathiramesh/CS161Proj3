@@ -165,9 +165,9 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
         for i in range(len(msg)-1):
             print("fragmentation", msg[i:i+1])
-            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1])
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload=msg[i:i+1])
             #dummy packet
-            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1], ttl=ttl)
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload=msg[i:i+1], ttl=ttl)
             response = self.get_pkt()
             if response:
                 print("RESPONSE")
