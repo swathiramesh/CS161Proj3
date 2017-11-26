@@ -153,7 +153,7 @@ class PacketUtils:
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
         #msg = "GET / HTTP/1.1\nHost: www.google.com\r\n"
-        print(msg)
+        print("MSG", msg)
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
