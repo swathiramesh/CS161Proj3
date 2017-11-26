@@ -166,7 +166,8 @@ class PacketUtils:
             self.send_pkt(flags="A", seq=packet[TCP].ack + 1, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
             packet = self.get_pkt()
             while not (self.packetQueue._qsize == 0) and packet:
-                print(packet['Raw'].load)
+                if 'Raw' in packet:
+                    print(packet['Raw'].load)
                 packet = self.get_pkt()
             self.packetQueue = Queue.Queue(100000)
 
