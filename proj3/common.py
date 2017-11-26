@@ -175,7 +175,7 @@ class PacketUtils:
                 return "Error"
             if response and Raw in response:
                 print("HERE")
-                print(packet['Raw'].load)
+                print(packet[Raw].load)
             response = self.get_pkt()
 
 
