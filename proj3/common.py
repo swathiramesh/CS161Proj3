@@ -163,7 +163,12 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
         for i in range(len(msg)-1):
             print("fragmentation", msg[i:i+1])
-            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
+            self.send_pkt(flags="A", seq=packet[TCP].ack + 1, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
+            packet = self.get_pkt()
+            while not (self.packetQueue._qsize == 0) and packet:
+                packet = self.get_pkt()
+                print(packet['Raw'].load
+            self.packetQueue = Queue.Queue(100000)
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
