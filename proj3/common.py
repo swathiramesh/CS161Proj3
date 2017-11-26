@@ -177,7 +177,7 @@ class PacketUtils:
                 print("HERE")
                 print(packet['Raw'].load)
             response = self.get_pkt()
-
+        print("END")
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
