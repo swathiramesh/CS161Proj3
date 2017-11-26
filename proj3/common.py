@@ -164,17 +164,13 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
         for i in range(len(msg)-1):
             print("fragmentation", msg[i:i+1])
-            self.send_pkt(flags="A", seq=packet[TCP].ack + 1, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
-            packet = self.get_pkt()
-            while packet == None:
-                print("Here")
-                print(msg[i:i+1])
-                print(packet[TCP])
-                self.send_pkt(flags="A", seq=packet[TCP].ack + 1, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
-                packet = self.get_pkt()
-                if packet and 'Raw' in packet:
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload=msg[i:i+1])
+            response = self.get_pkt()
+            while response == None:
+                self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
+                response = self.get_pkt()
+                if response and 'Raw' in response:
                     print(packet['Raw'].load)
-            self.packetQueue = Queue.Queue(100000)
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
