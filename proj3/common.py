@@ -172,6 +172,7 @@ class PacketUtils:
             if 'Raw' in response:
                 print("HERE")
                 print(packet['Raw'].load)
+            self.packetQueue = Queue.Queue(100000)
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
