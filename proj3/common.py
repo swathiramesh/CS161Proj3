@@ -171,17 +171,17 @@ class PacketUtils:
             response = self.get_pkt()
             if response:
                 print("RESPONSE")
-                if Raw in response:
-                    print("ok") 
-        # response = self.get_pkt()
-        # while not (self.packetQueue._qsize == 0):
-        #     print("WHILE")
-        #     if response and isRST(response):
-        #         return "Error"
-        #     if response and Raw in response:
-        #         print("HERE")
-        #         print(packet[Raw].load)
-        #     response = self.get_pkt()
+                if 'Raw' in response:
+                    print("ok")
+        response = self.get_pkt()
+        while not (self.packetQueue._qsize == 0):
+            print("WHILE")
+            if response and isRST(response):
+                return "Error"
+            if response and Raw in response:
+                print("HERE")
+                print(packet[Raw].load)
+            response = self.get_pkt()
         print("END")
 
     # Returns "DEAD" if server isn't alive,
