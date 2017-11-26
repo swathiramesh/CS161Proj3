@@ -169,8 +169,8 @@ class PacketUtils:
             while response == None:
                 self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
                 response = self.get_pkt()
-                if response and 'Raw' in response:
-                    print(packet['Raw'].load)
+            if response and 'Raw' in response:
+                print(packet['Raw'].load)
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
