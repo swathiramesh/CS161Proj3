@@ -172,6 +172,8 @@ class PacketUtils:
         response = self.get_pkt()
         while not (self.packetQueue._qsize == 0):
             print("WHILE")
+            if response and isRST(response):
+                return "Error" 
             if response and Raw in response:
                 print("HERE")
                 print(packet['Raw'].load)
