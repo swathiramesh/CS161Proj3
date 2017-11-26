@@ -164,10 +164,10 @@ class PacketUtils:
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
         for i in range(len(msg)-1):
             print("fragmentation", msg[i:i+1])
-            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1])
             response = self.get_pkt()
             while response == None:
-                self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=msg[i:i+1])
+                self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq+i, sport=sport, dip=target, payload=msg[i:i+1])
                 response = self.get_pkt()
             if 'Raw' in response:
                 print("HERE")
