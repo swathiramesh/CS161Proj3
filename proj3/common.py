@@ -168,11 +168,11 @@ class PacketUtils:
             self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload=msg[i:i+1])
             #dummy packet
             self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload=msg[i:i+1], ttl=ttl)
-            response = self.get_pkt()
-            if response:
-                print("RESPONSE")
-                if 'Raw' in response:
-                    print("ok")
+            #response = self.get_pkt()
+            # if response:
+            #     print("RESPONSE")
+            #     if 'Raw' in response:
+            #         print("ok")
         response = self.get_pkt()
         while not (self.packetQueue._qsize == 0):
             print("WHILE")
