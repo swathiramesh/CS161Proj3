@@ -192,7 +192,7 @@ class PacketUtils:
         while packet == None:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
-        #payload = "GET / HTTP/1.1\nHost: inst.eecs.berkeley.edu\n\n"
+        payload = "GET / HTTP/1.1\nHost: inst.eecs.berkeley.edu\n\n"
 
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=triggerfetch)
