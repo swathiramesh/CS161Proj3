@@ -243,14 +243,14 @@ class PacketUtils:
                 while self.packetQueue._qsize > 0 and response:
                     # if response == None:
                     #     return "Error"
-                        if isRST(response):
-                            print("RST PACKET")
-                            rst_lst[i] =True
+                    if isRST(response):
+                        print("RST PACKET")
+                        rst_lst[i] =True
                             #break
-                        ip_to_add = response[IP].src
-                        if isTimeExceeded(response) and ip_to_add not in existing_ip:
-                            ip_addr[i] = ip_to_add
-                            existing_ip.add(ip_to_add)
+                    ip_to_add = response[IP].src
+                    if isTimeExceeded(response) and ip_to_add not in existing_ip:
+                        ip_addr[i] = ip_to_add
+                        existing_ip.add(ip_to_add)
                             #break
                     response = self.get_pkt(timeout=2)
                     self.packetQueue = Queue.Queue(100000)
