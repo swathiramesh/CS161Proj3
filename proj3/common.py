@@ -224,7 +224,7 @@ class PacketUtils:
         ip_addr = [None for i in range(hops)]
         rst_lst = [False for i in range(hops)]
         existing_ip = set()
-        #print("HOPS", hops)
+        print("HOPS", hops)
         for i in range(hops):
             #result = self.get_pkt()
             #for i in range(3):
@@ -234,24 +234,24 @@ class PacketUtils:
                 while packet == None:
                     print("HERE")
                     self.send_pkt(flags="S", sport=sport)
-                    packet = self.get_pkt(timeout=2)
-                self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, dip=target)
+                    packet = self.get_pkt()
+                self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 response = self.get_pkt(timeout=2)
-                while self.packetQueue._qsize > 0 and response:
+                while not (self.packetQueue._qsize == 0) and response:
                     # if response == None:
                     #     return "Error"
                     if isRST(response):
                         print("RST PACKET")
                         rst_lst[i] =True
-                            #break
+                        #break
                     ip_to_add = response[IP].src
                     if isTimeExceeded(response) and ip_to_add not in existing_ip:
                         ip_addr[i] = ip_to_add
                         existing_ip.add(ip_to_add)
-                            #break
+                        #break
                     response = self.get_pkt(timeout=2)
                     self.packetQueue = Queue.Queue(100000)
         print("RST LIST", rst_lst)
