@@ -195,8 +195,7 @@ class PacketUtils:
         #payload = "GET / HTTP/1.1\nHost: inst.eecs.berkeley.edu\n\n"
 
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
-        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target,
-            payload=triggerfetch)
+        self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target, payload=triggerfetch)
 
         while(self.packetQueue.qsize() > 0):
             response = self.get_pkt()
