@@ -14,7 +14,7 @@ maxhop = 25
 # A request that will trigger the great firewall but will NOT cause
 # the web server to process the connection.  You probably want it here
 
-triggerfetch = "GET / HTTP/1.1\nHost: www.google.com\r\n\r\n"
+triggerfetch = "GET / HTTP/1.1\nHost: www.google.com\n\n"
 
 # A couple useful functions that take scapy packets
 def isRST(p):
@@ -175,6 +175,7 @@ class PacketUtils:
             if response and 'Raw' in response and not isTimeExceeded(response):
                 print(response['Raw'].load)
                 result += str(response['Raw'].load)
+        print("RESULT", result)
         return result
 
     # Returns "DEAD" if server isn't alive,
