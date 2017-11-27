@@ -176,7 +176,7 @@ class PacketUtils:
             if response and 'Raw' in response and not isTimeExceeded(response):
                 print(response['Raw'].load)
                 result += str(response['Raw'].load)
-        print("RESULT," result)
+        print("RESULT", result)
         return result
 
     # Returns "DEAD" if server isn't alive,
