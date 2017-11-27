@@ -1,0 +1,4 @@
+The hardest part of this project for us was understanding how
+to use the functions and the tools provided to us, such as tcpdump and understanding how pcap
+works. In terms of effort it was really difficult for us working on different networks
+because at times it seemed like our code worked but the network issues made it difficult to test.  
