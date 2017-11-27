@@ -220,11 +220,11 @@ class PacketUtils:
     # if there is a RST back for that particular request
     def traceroute(self, target, hops):
         #return "NEED TO IMPLEMENT"
-        hops = 32
+        #hops = 32
         ip_addr = [None for i in range(hops)]
         rst_lst = [False for i in range(hops)]
         existing_ip = set()
-        print("HOPS", hops)
+        #print("HOPS", hops)
         for i in range(hops):
             #result = self.get_pkt()
             #for i in range(3):
@@ -235,7 +235,7 @@ class PacketUtils:
                     print("HERE")
                     self.send_pkt(flags="S", sport=sport)
                     packet = self.get_pkt(timeout=2)
-                self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1)
+                self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, dip=target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
