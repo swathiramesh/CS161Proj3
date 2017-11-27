@@ -240,18 +240,19 @@ class PacketUtils:
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 self.send_pkt(ttl = i, sport=sport, flags = "PA", seq=packet[TCP].ack, ack=packet[TCP].seq+1, payload=triggerfetch, dip = target)
                 response = self.get_pkt(timeout=2)
-                while not (self.packetQueue._qsize == 0) and response:
+                while self.packetQueue._qsize > 0:
                     # if response == None:
                     #     return "Error"
-                    if isRST(response):
-                        print("RST PACKET")
-                        rst_lst[i] =True
-                        #break
-                    ip_to_add = response[IP].src
-                    if isTimeExceeded(response) and ip_to_add not in existing_ip:
-                        ip_addr[i] = ip_to_add
-                        existing_ip.add(ip_to_add)
-                        #break
+                    if response:
+                        if isRST(response):
+                            print("RST PACKET")
+                            rst_lst[i] =True
+                            #break
+                        ip_to_add = response[IP].src
+                        if isTimeExceeded(response) and ip_to_add not in existing_ip:
+                            ip_addr[i] = ip_to_add
+                            existing_ip.add(ip_to_add)
+                            #break
                     response = self.get_pkt(timeout=2)
                     self.packetQueue = Queue.Queue(100000)
         print("RST LIST", rst_lst)
