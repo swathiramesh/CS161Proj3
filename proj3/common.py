@@ -152,7 +152,6 @@ class PacketUtils:
     # server itself (from a previous traceroute incantation
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
-        target = "34.224.169.21"
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
@@ -165,7 +164,7 @@ class PacketUtils:
         for i in range(len(msg_list)):
             self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload=msg_list[i])
             #dummy packet
-            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload='a', ttl=ttl)
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload='m', ttl=ttl)
 
         result = ""
         while (self.packetQueue.qsize() > 0):
@@ -176,7 +175,6 @@ class PacketUtils:
             if response and 'Raw' in response and not isTimeExceeded(response):
                 print(response['Raw'].load)
                 result += str(response['Raw'].load)
-        print("RESULT", result)
         return result
 
     # Returns "DEAD" if server isn't alive,
