@@ -152,8 +152,7 @@ class PacketUtils:
     # server itself (from a previous traceroute incantation
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
-        msg = "GET / HTTP/1.1\r\nHost: www.google.com\r\n\r\n"
-        #print(len(msg))
+        #target = "34.224.169.21"
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
@@ -161,21 +160,24 @@ class PacketUtils:
             self.send_pkt(flags="S", sport=sport)
             packet = self.get_pkt()
         self.send_pkt(flags="A", seq=packet[TCP].ack, ack=packet[TCP].seq+1, sport=sport, dip=target)
-        for i in range(len(msg)-1):
-            print("fragmentation", msg[i:i+1])
-            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq + i +1, sport=sport, dip=target, payload=msg[i:i+1])
+
+        msg_list = list(msg)
+        for i in range(len(msg_list)):
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload=msg_list[i])
             #dummy packet
-            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq + i +1, sport=sport, dip=target, payload=msg[i:i+1], ttl=ttl)
+            self.send_pkt(flags="A", seq=packet[TCP].ack + i, ack=packet[TCP].seq, sport=sport, dip=target, payload='a', ttl=ttl)
+
+        result = ""
         while (self.packetQueue.qsize() > 0):
             response = self.get_pkt()
             print("RESPONSE: ", response)
             if response and isRST(response):
                 return "Error"
-            if response and 'Raw' in response:
-                print("HERE")
+            if response and 'Raw' in response and not isTimeExceeded(response):
                 print(response['Raw'].load)
-            #response = self.get_pkt()
-        print("END")
+                result += str(response['Raw'].load)
+        print(result)
+        return result
 
     # Returns "DEAD" if server isn't alive,
     # "LIVE" if teh server is alive,
