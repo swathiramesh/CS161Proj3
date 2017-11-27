@@ -152,7 +152,7 @@ class PacketUtils:
     # server itself (from a previous traceroute incantation
     def evade(self, target, msg, ttl):
         #return "NEED TO IMPLEMENT"
-        target = "34.224.169.21"
+        #target = "34.224.169.21"
         sport = random.randint(2000, 30000)
         self.send_pkt(flags="S", sport=sport, dip=target)
         packet = self.get_pkt()
